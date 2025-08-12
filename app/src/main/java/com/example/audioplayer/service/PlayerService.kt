@@ -1,9 +1,6 @@
 package com.example.audioplayer.service
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.Service
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -13,6 +10,7 @@ import androidx.core.app.NotificationCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import com.example.audioplayer.view.MainActivity
+
 
 class PlayerService : Service() {
 
@@ -26,8 +24,10 @@ class PlayerService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+
         player = ExoPlayer.Builder(this).build()
         mediaSession = MediaSessionCompat(this, "MusicService")
+
         createNotificationChannel()
     }
 
@@ -45,22 +45,24 @@ class PlayerService : Service() {
     fun pause() { player.pause() }
     fun isPlaying(): Boolean = player.isPlaying
     fun seekTo(positionMs: Long) { player.seekTo(positionMs) }
-    fun next(){ if (player.hasNextMediaItem()) player.seekToNext() }
-    fun previous(){ if (player.hasPreviousMediaItem()) player.seekToPrevious() }
+    fun next() { if (player.hasNextMediaItem()) player.seekToNext() }
+    fun previous() { if (player.hasPreviousMediaItem()) player.seekToPrevious() }
     fun getCurrentPosition() = player.currentPosition
     fun getDuration() = player.duration
     fun getCurrentIndex() = player.currentMediaItemIndex
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // handle media button intents if needed
+        // Pending intent for opening your app on notification tap
         val pendingIntent = PendingIntent.getActivity(
-            this, 0, Intent(this, MainActivity::class.java),
+            this, 0,
+            Intent(this, MainActivity::class.java),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        // Basic notification, you can later improve with PlayerNotificationManager
         val notif = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Music Player")
-            .setContentText("Playing")
+            .setContentText(if (isPlaying()) "Playing" else "Paused")
             .setSmallIcon(android.R.drawable.ic_media_play)
             .setContentIntent(pendingIntent)
             .build()

@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <!-- On Android 13+ you might need READ_MEDIA_AUDIO instead -->
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 
     <application
@@ -18,7 +17,12 @@
 
         <service
             android:name=".service.PlayerService"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </service>
         <activity
             android:name=".view.MainActivity"
             android:exported="true">

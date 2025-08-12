@@ -45,7 +45,6 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.androidx.media3.exoplayer)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -56,7 +55,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 
     // ExoPlayer
-    implementation(libs.exoplayer)
+    implementation("androidx.media3:media3-exoplayer:1.8.0")
 // Media compat (for MediaSession / Notification)
-    implementation("androidx.media:media:1.7.0")
+    implementation(libs.androidx.media)
+    implementation(libs.androidx.media3.session)
 }
